@@ -16,12 +16,19 @@ class Quiz {
   }
 
   shuffleQuestions() {
-    this.questions.forEach((currentQuestion) => {
-      let randomIndex = Math.floor(Math.random() * currentQuestion);
-      let temp = this.questions[currentQuestion];
-      this.questions[currentQuestion] = this.questions[currentQuestion];
-      this.questions[randomIndex] = temp;
-    });
+    // this.questions.forEach((currentQuestion) => {
+    //   let randomIndex = Math.floor(Math.random() * currentQuestion);
+    //   let temp = this.questions[currentQuestion];
+    //   this.questions[currentQuestion] = this.questions[currentQuestion];
+    //   this.questions[randomIndex] = temp;
+    // });
+    for (let i = this.questions.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.questions[i], this.questions[j]] = [
+        this.questions[j],
+        this.questions[i],
+      ];
+    }
   }
 
   checkAnswer(answer) {
@@ -40,20 +47,21 @@ class Quiz {
 
   filterQuestionsByDifficulty(difficulty) {
     if (difficulty >= 1 && difficulty <= 3) {
+      const tempQuestionsArray = this.questions.filter(
+        (currentQuestion) => currentQuestion.difficulty === difficulty
+      );
 
-      const tempQuestionsArray = this.questions.filter((currentQuestion)=> currentQuestion.difficulty === difficulty);
-      
       this.questions = tempQuestionsArray;
       //this.questions.splice(0, this.questions.length, ...tempQuestionsArray);
     }
   }
 
   averageDifficulty() {
-    let sumOfDifficulty = this.questions.reduce((acc, currentQuestion) => acc + currentQuestion.difficulty, 0)
-    
-    return Math.round(sumOfDifficulty / this.questions.length)
+    let sumOfDifficulty = this.questions.reduce(
+      (acc, currentQuestion) => acc + currentQuestion.difficulty,
+      0
+    );
+
+    return Math.round(sumOfDifficulty / this.questions.length);
   }
 }
-
-
-
