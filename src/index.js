@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Quiz view elements
   const progressBar = document.querySelector("#progressBar");
+  const resultProgressBar = document.querySelector("#resultProgressBar")
   const questionCount = document.querySelector("#questionCount");
   const questionContainer = document.querySelector("#question");
   const choiceContainer = document.querySelector("#choices");
@@ -13,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // End view elements
   const resultContainer = document.querySelector("#result");
-
+  const restartButton = document.querySelector("#restartButton");
   /************  SET VISIBILITY OF VIEWS  ************/
 
   // Show the quiz view (div#quizView) and hide the end view (div#endView)
@@ -57,14 +58,16 @@ document.addEventListener("DOMContentLoaded", () => {
   /************  SHOW INITIAL CONTENT  ************/
 
   // Convert the time remaining in seconds to minutes and seconds, and pad the numbers with zeros if needed
+ function updateTimer () { 
   const minutes = Math.floor(quiz.timeRemaining / 60)
-    .toString()
-    .padStart(2, "0");
-  const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
+      .toString()
+      .padStart(2, "0");
+    const seconds = (quiz.timeRemaining % 60).toString().padStart(2, "0");
 
-  // Display the time remaining in the time remaining container
-  const timeRemainingContainer = document.getElementById("timeRemaining");
-  timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+    // Display the time remaining in the time remaining container
+    const timeRemainingContainer = document.getElementById("timeRemaining");
+    timeRemainingContainer.innerText = `${minutes}:${seconds}`;
+  }
 
   // Show first question
   showQuestion();
@@ -72,6 +75,20 @@ document.addEventListener("DOMContentLoaded", () => {
   /************  TIMER  ************/
 
   let timer;
+  
+
+  function startTimer() {
+    timer = setInterval(() => {
+    quiz.timeRemaining--
+    updateTimer()
+    console.log(quiz.timeRemaining)
+    if(quiz.timeRemaining <= 0){
+      clearInterval(timer);
+      showResults();
+      
+    }
+  },1000)}
+  startTimer();
 
   /************  EVENT LISTENERS  ************/
 
@@ -177,8 +194,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 2. Show the end view (div#endView)
     endView.style.display = "flex";
-
+    resultProgressBar.style.width = progressBar.style.width
     // 3. Update the result container (div#result) inner text to show the number of correct answers out of total questions
     resultContainer.innerText = `You scored ${quiz.correctAnswers} out of ${quiz.questions.length} correct answers!`; // This value is hardcoded as a placeholder
+    clearInterval(timer);
   }
+
+  restartButton.addEventListener("click", () => {
+    endView.style.display = "none";
+    quizView.style.display = "flex";
+    quiz.correctAnswers = 0;
+    quiz.currentQuestionIndex = 0;
+    
+    quiz.shuffleQuestions();
+    showQuestion()
+    quiz.timeRemaining = quiz.timeLimit;
+    updateTimer();
+    startTimer();
+  });
+
+
+
+
 });
+
+ 

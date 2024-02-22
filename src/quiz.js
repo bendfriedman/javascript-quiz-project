@@ -16,12 +16,6 @@ class Quiz {
   }
 
   shuffleQuestions() {
-    // this.questions.forEach((currentQuestion) => {
-    //   let randomIndex = Math.floor(Math.random() * currentQuestion);
-    //   let temp = this.questions[currentQuestion];
-    //   this.questions[currentQuestion] = this.questions[currentQuestion];
-    //   this.questions[randomIndex] = temp;
-    // });
     for (let i = this.questions.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.questions[i], this.questions[j]] = [
